@@ -11,7 +11,7 @@ class Pile{
     
     addCard(){
         // Make next card in stack moveable
-        if(this.cards.length>1){
+        if(this.cards.length>0){
             this.cards[this.cards.length-1].isMoveable = false;
         }
     }
