@@ -107,6 +107,6 @@ class TableauPile extends Pile{
         
         resetPosition(card){
             card.pos[0] = this.pos[0];
-            card.pos[1] = this.pos[1] + (this.cards.length-1)*0.05;
+            card.pos[1] = this.pos[1] + (this.cards.length-1)*0.03;
         }
 }

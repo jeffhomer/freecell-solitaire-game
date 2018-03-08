@@ -131,7 +131,7 @@ class EventManager{
     handleWindowResize(event){
         var game = Game.getInstance();
         game.width = Math.min(document.body.clientWidth,800);
-        game.height = game.width * 600 / 800;
+        game.height = game.width * game.aspectratio;
         game.update();
     }
 

@@ -9,6 +9,7 @@ class Game {
         this.canvas = document.getElementById("gameCanvas");
         this.width = 800;
         this.height = 600;
+        this.aspectratio = 0.75;
 
         // Array of game objects
         this.gameObjects = [];
@@ -92,9 +93,7 @@ class Game {
         // Clear canvas
         this.canvas.getContext("2d").clearRect(0,0,this.width,this.height);
 
-        // Draw background
-
-        // Draw cards
+        // Draw cards and background
         for (var index in this.gameObjects){
             this.gameObjects[index].update();
         }
