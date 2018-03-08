@@ -64,6 +64,7 @@ class FoundationPile extends Pile{
                 this.cards.push(card);
             }
             card.resetPosition();
+            this.checkForWin();
         }
 
         checkForWin(){
@@ -71,7 +72,7 @@ class FoundationPile extends Pile{
             for(var index in game.foundationPiles){
                 if(game.foundationPiles[index].cards.length!=13){return;}
             }
-            StateManager.getInstance().setCurentState("Win");
+            StateManager.getInstance().setCurentState(2);
         }
 }
 

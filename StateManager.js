@@ -2,7 +2,7 @@ var stateManager;
 
 class StateManager{
     constructor(){
-        this.states = ["Welcome","Play","End"];
+        this.states = ["Welcome","Play","Win"];
         this.data = JSON.parse(data);
         this.setCurrentState(0);
     }
