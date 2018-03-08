@@ -3,6 +3,7 @@ var stateManager;
 class StateManager{
     constructor(){
         this.states = ["Welcome","Play","End"];
+        this.data = JSON.parse(data);
         this.setCurrentState(0);
     }
 
@@ -32,7 +33,7 @@ class StateManager{
         var game = Game.getInstance();
         game.gameObjects = [];
         game.gameObjects.push(new GameSurface());
-        game.gameObjects.push(new Text("Welcome! Press Enter to play!"));
+        game.gameObjects.push(new Text(this.data[0].welcomemessage));
         game.initPiles();
         game.update();
     }
@@ -50,7 +51,7 @@ class StateManager{
         var game = Game.getInstance();
         game.gameObjects = [];
         game.gameObjects.push(new GameSurface());
-        game.gameObjects.push(new Text("Congratulations! You win!!"));
+        game.gameObjects.push(new Text(this.data[0].winmessage));
         game.initPiles();
         game.update();
     }
