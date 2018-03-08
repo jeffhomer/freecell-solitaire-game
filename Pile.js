@@ -5,57 +5,96 @@ class Pile{
         this.pos;
     }
 
+    get collisionArea(){
+        return [this.pos[0],this.pos[1],Card.width,Card.height];
+    }
+    
+    addCard(){
+        // Make next card in stack moveable
+        if(this.cards.length>1){
+            this.cards[this.cards.length-2].isMoveable = false;
+        }
+    }
+    
+    removeCard(){
+        // Make next card in stack moveable
+        if(this.cards.length>1){
+            this.cards[this.cards.length-2].isMoveable = true;
+        }
+        return this.cards.pop();
+    }
+
     resetPosition(card){
-        card.pos = this.pos;
+        card.pos[0] = this.pos[0];
+        card.pos[1] = this.pos[1];
     }
 }
 
 class FreePile extends Pile{
     constructor(index){
         super(index);
-        var dx = 0.2/9;
+        var dx = (1-8*Card.width)/(8+1);
         var dy = 0.05;
-        this.pos = [(dx+0.1)*this.index,dy];
+        this.pos = [dx+(dx+Card.width)*this.index,dy];
     }
 
     addCard(card){
-        if(this.cards.lenth==0){
+        if(this.cards.length==0){
+            card.pile.removeCard();
             card.pile = this;
-            this.cards.push(card.pile.pop());
+            this.cards.push(card);
         }
+        card.resetPosition();
     }
 }
 
 class FoundationPile extends Pile{
     constructor(index){
         super(index);
-        var dx = 0.2/9;
+        var dx = (1-8*Card.width)/(8+1);
         var dy = 0.05;
-        this.pos = [(dx+0.1)*(this.index+4),dy];
+        this.pos = [dx+(dx+Card.width)*(this.index+4),dy];
     }
     
         addCard(card){
-            if(card.suit==index && card.number == this.cards.lenth){
+            if(card.suit==this.index && card.number == this.cards.length){
+                card.pile.removeCard();
                 card.pile = this;
-                this.cards.push(card.pile.pop());
+                super.addCard();
+                this.cards.push(card);
             }
+            card.resetPosition();
         }
 }
 
 class TableauPile extends Pile{
     constructor(index){
         super(index);
-        var dx = 0.2/9;
+        var dx = (1-8*Card.width)/(8+1);
         var dy = 0.2;
-        this.pos = [(dx+0.1)*this.index,dy];
+        this.pos = [dx+(dx+Card.width)*this.index,dy];
     }
     
-        addCard(card){
-            if((this.cards.lenth==0) ||
-                (this.cards.length > 0 && card.number+1 == this.cards[this.cards.length-1].number)){
-                card.pile = this;
-                this.cards.push(card.pile.pop());
+        get collisionArea(){
+            if(this.cards.length==0){
+                return super.collisionArea;
+            } else{
+                var pos = this.cards[this.cards.length-1].pos;
+                return [pos[0],pos[1],Card.width,Card.height];
             }
+        }
+    
+        addCard(card){
+            if((this.cards.length==0) ||
+                (card.number+1 == this.cards[this.cards.length-1].number &&
+                card.suit % 2 != this.cards[this.cards.length-1].suit % 2)){
+                card.pile.removeCard();
+                card.pile = this;
+                super.addCard();
+                this.cards.push(card);
+                this.cards[this.cards.length-2].isMoveable = false;
+            }
+            card.resetPosition();
         }
         
         resetPosition(card){
