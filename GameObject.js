@@ -154,7 +154,7 @@ class GameSurface extends GameObject{
         this.ctx.strokeStyle = color;
         this.ctx.setLineDash([5,5]);
         this.ctx.strokeRect(pile.pos[0]*game.width,pile.pos[1]*game.height,Card.width*game.width,Card.height*game.height);
-        this.ctx.setLineDash([1]);
+        this.ctx.setLineDash([]);
 
         this.ctx.font = Math.floor(game.height/50).toString() + "px Arial";
         this.ctx.textAlign="center";
