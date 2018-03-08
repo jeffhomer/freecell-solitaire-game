@@ -146,7 +146,7 @@ class GameSurface extends GameObject{
 
         // Tableau markers
         for(var i=0;i<game.tableauPiles.length;i++){
-            this.drawMarker(game.tableauPiles[i],"Tableau " + i.toString(),'white');
+            this.drawMarker(game.tableauPiles[i],"Tableau " + (i+1).toString(),'white');
         }
     }
 
