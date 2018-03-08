@@ -49,20 +49,25 @@ class Game {
 
     initPiles(){
         // Four free piles
+        this.freePiles = [];
         for(var i=0;i<4;i++){
             this.freePiles.push(new FreePile(i));
         }
         
         // Four foundation piles
+        this.foundationPiles = [];
         for(var i=0;i<4;i++){
             this.foundationPiles.push(new FoundationPile(i));
         }
         
         // Eight tableau piles
+        this.tableauPiles = [];
         for(var i=0;i<8;i++){
             this.tableauPiles.push(new TableauPile(i));
         }
+    }
 
+    shuffleAndDeal(){       
         // Shuffle deck
         var indices = new Array(52);
         for(var i=0;i<52;i++){
@@ -84,7 +89,12 @@ class Game {
     }
 
     update(){
+        // Clear canvas
         this.canvas.getContext("2d").clearRect(0,0,this.width,this.height);
+
+        // Draw background
+
+        // Draw cards
         for (var index in this.gameObjects){
             this.gameObjects[index].update();
         }

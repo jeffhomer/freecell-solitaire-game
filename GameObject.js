@@ -45,7 +45,7 @@ class Card extends GameObject{
     }
 
     getCardText(){
-        var suits = ["Clubs","Diamonds","Spades","Hearts"];
+        var suits = Card.getSuits();
         switch(this.number){
             case 12:
                 var card = "K";
@@ -67,8 +67,16 @@ class Card extends GameObject{
     }
 
     getCardColor(){
-        var colors = ["black","red"];
+        var colors = Card.getColors();
         this.color = colors[this.suit % 2];
+    }
+
+    static getSuits(){
+        return ["Clubs","Diamonds","Spades","Hearts"];
+    }
+
+    static getColors(){
+        return ["black","red"];
     }
 
     update(){
@@ -87,9 +95,10 @@ class Card extends GameObject{
         this.ctx.strokeRect(pos_scaled[0],pos_scaled[1],width_scaled,height_scaled);
 
         // Card type
+        this.ctx.font = Math.floor(game.height/50).toString() + "px Arial";
         this.ctx.fillStyle=this.color;
-        this.ctx.textAlign="left";
-        this.ctx.fillText(this.text,pos_scaled[0],pos_scaled[1]+10);
+        this.ctx.textAlign="center";
+        this.ctx.fillText(this.text,pos_scaled[0]+width_scaled/2,pos_scaled[1]+10);
     }
     
     resetPosition(){
@@ -109,13 +118,58 @@ class Card extends GameObject{
     }
 }
 
+class GameSurface extends GameObject{
+    constructor(){
+        super();
+
+        // Get context
+        this.ctx = Game.getInstance().canvas.getContext("2d");
+    }
+
+    update(){
+        // Game instance
+        var game = Game.getInstance();
+
+        // Area
+        this.ctx.fillStyle='green'
+        this.ctx.fillRect(0,0,game.width,game.height);
+
+        // Free markers
+        for(var i=0;i<game.freePiles.length;i++){
+            this.drawMarker(game.freePiles[i],"FREE",'white');
+        }
+        
+        // Foundation markers
+        for(var i=0;i<game.foundationPiles.length;i++){
+            this.drawMarker(game.foundationPiles[i],Card.getSuits()[i],Card.getColors()[i % 2]);
+        }
+
+        // Tableau markers
+        for(var i=0;i<game.tableauPiles.length;i++){
+            this.drawMarker(game.tableauPiles[i],"Tableau " + i.toString(),'white');
+        }
+    }
+
+    drawMarker(pile,text,color){
+        this.ctx.strokeStyle = color;
+        this.ctx.setLineDash([5,5]);
+        this.ctx.strokeRect(pile.pos[0]*game.width,pile.pos[1]*game.height,Card.width*game.width,Card.height*game.height);
+        this.ctx.setLineDash([1]);
+
+        this.ctx.font = Math.floor(game.height/50).toString() + "px Arial";
+        this.ctx.textAlign="center";
+        this.ctx.fillStyle='white';
+        this.ctx.fillText(text.toUpperCase(),(pile.pos[0]+Card.width/2)*game.width,(pile.pos[1]+Card.height/2)*game.height);
+    }
+}
+
 class Text extends GameObject{
     constructor(text){
         super();
         var game = Game.getInstance();
         this.ctx = game.canvas.getContext("2d");
         this.text = text;
-        this.pos = [1.0/2,1.0/2]
+        this.pos = [0.5,0.75]
     }
 
     update(){
@@ -124,6 +178,7 @@ class Text extends GameObject{
 
         // Write text
         var pos_scaled = [this.pos[0]*game.width,this.pos[1]*game.height];
+        this.ctx.font = Math.floor(game.height/20).toString() + "px Arial";
         this.ctx.textAlign="center";
         this.ctx.fillText(this.text,pos_scaled[0],pos_scaled[1]);
     }

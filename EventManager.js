@@ -11,7 +11,7 @@ class EventManager{
         game.canvas.onmousedown = this.handleMouseDown;
         game.canvas.onmousemove = this.handleMouseMove;
         game.canvas.onmouseup = this.handleMouseUp;
-        game.canvas.onclick = this.handleMouseClick;
+        game.canvas.ondblclick = this.handleMouseClick;
         window.addEventListener("resize",this.handleWindowResize);
 
         // Initial window resize
@@ -39,6 +39,7 @@ class EventManager{
             var game = Game.getInstance();
             for (var index in game.gameObjects){
                 var card = game.gameObjects[index];
+                if(!(card instanceof Card)){continue;}
                 if(card.isMoveable && 
                     clickPos[0] < card.pos[0] + Card.width &&
                     clickPos[0] > card.pos[0] &&
@@ -97,6 +98,7 @@ class EventManager{
             var game = Game.getInstance();
             for (var index in game.gameObjects){
                 var card = game.gameObjects[index];
+                if(!(card instanceof Card)){continue;}
                 if(card.isMoveable && 
                     clickPos[0] < card.pos[0] + Card.width &&
                     clickPos[0] > card.pos[0] &&

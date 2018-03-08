@@ -12,7 +12,7 @@ class Pile{
     addCard(){
         // Make next card in stack moveable
         if(this.cards.length>1){
-            this.cards[this.cards.length-2].isMoveable = false;
+            this.cards[this.cards.length-1].isMoveable = false;
         }
     }
     
@@ -65,13 +65,21 @@ class FoundationPile extends Pile{
             }
             card.resetPosition();
         }
+
+        checkForWin(){
+            var game = Game.getInstance();
+            for(var index in game.foundationPiles){
+                if(game.foundationPiles[index].cards.length!=13){return;}
+            }
+            StateManager.getInstance().setCurentState("Win");
+        }
 }
 
 class TableauPile extends Pile{
     constructor(index){
         super(index);
         var dx = (1-8*Card.width)/(8+1);
-        var dy = 0.25;
+        var dy = 0.3;
         this.pos = [dx+(dx+Card.width)*this.index,dy];
     }
     
@@ -92,13 +100,12 @@ class TableauPile extends Pile{
                 card.pile = this;
                 super.addCard();
                 this.cards.push(card);
-                this.cards[this.cards.length-2].isMoveable = false;
             }
             card.resetPosition();
         }
         
         resetPosition(card){
             card.pos[0] = this.pos[0];
-            card.pos[1] = this.pos[1] + this.cards.length*0.05;
+            card.pos[1] = this.pos[1] + (this.cards.length-1)*0.05;
         }
 }
