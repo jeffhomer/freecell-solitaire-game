@@ -73,7 +73,11 @@ class Game {
             [indices[i],indices[j]] = [indices[j],indices[i]];
         }
         for(var i=0;i<indices.length;i++){
-            var card = new Card(indices[i],this.tableauPiles[i % 8]);
+            var pile = this.tableauPiles[i % 8];
+            var card = new Card(indices[i],pile);
+            if(pile.cards.length>1){
+                pile.cards[pile.cards.length-2].isMoveable = false;
+            }
             this.gameObjects.push(card);
             card.resetPosition();
         }

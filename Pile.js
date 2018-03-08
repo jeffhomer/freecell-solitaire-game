@@ -71,7 +71,7 @@ class TableauPile extends Pile{
     constructor(index){
         super(index);
         var dx = (1-8*Card.width)/(8+1);
-        var dy = 0.2;
+        var dy = 0.25;
         this.pos = [dx+(dx+Card.width)*this.index,dy];
     }
     

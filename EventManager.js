@@ -11,6 +11,7 @@ class EventManager{
         game.canvas.onmousedown = this.handleMouseDown;
         game.canvas.onmousemove = this.handleMouseMove;
         game.canvas.onmouseup = this.handleMouseUp;
+        game.canvas.onclick = this.handleMouseClick;
         window.addEventListener("resize",this.handleWindowResize);
 
         // Initial window resize
@@ -47,6 +48,7 @@ class EventManager{
                         game.gameObjects.push(game.gameObjects.splice(game.gameObjects.indexOf(card), 1)[0]);
                         this.selectedCard = card;
                         this.prevMousePos = clickPos;
+                        return;
                 }
             }
         }
@@ -87,6 +89,41 @@ class EventManager{
             this.selectedCard = null;
         }
         Game.getInstance().update();
+    }
+    
+    handleMouseClick(event){
+        if(StateManager.getInstance().currentState == "Play"){
+            var clickPos = EventManager.getMousePosition(event);
+            var game = Game.getInstance();
+            for (var index in game.gameObjects){
+                var card = game.gameObjects[index];
+                if(card.isMoveable && 
+                    clickPos[0] < card.pos[0] + Card.width &&
+                    clickPos[0] > card.pos[0] &&
+                    clickPos[1] < card.pos[1] + Card.height && 
+                    clickPos[1] > card.pos[1]){
+                        // Move card to last element in game objects array for rendering
+                        game.gameObjects.push(game.gameObjects.splice(game.gameObjects.indexOf(card), 1)[0]);
+                       
+                        // Add card to corresponding foundatin pile
+                        var cardPile = card.pile;
+                        game.foundationPiles[card.suit].addCard(card);
+                        if(cardPile != card.pile){
+                            game.update();
+                            return;
+                        }
+
+                        // Add card to first available free pile
+                        for(var i=0;i<game.freePiles.length;i++){
+                            game.freePiles[i].addCard(card);
+                            if(cardPile != card.pile){
+                                game.update();
+                                return;
+                            }
+                        }
+                }
+            }
+        }
     }
 
     handleWindowResize(event){
