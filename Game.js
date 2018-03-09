@@ -1,5 +1,6 @@
 var game;
 
+// Main game class which holds game objects and display canvas (singleton)
 class Game {
 
     constructor(){
@@ -18,15 +19,13 @@ class Game {
         this.freePiles = [];
         this.foundationPiles = [];
         this.tableauPiles = [];
-
-        // Set state to welcome
-        //StateManager.getInstance();
     }
 
     get width(){
         return this._width;
     }
 
+    // Make sure changes to game width also change canvas width
     set width(w){
         this._width = w;
         this.canvas.width = w;
@@ -36,11 +35,13 @@ class Game {
         return this._height;
     }
 
+    // Make sure changes to game height also change canvas height
     set height(h){
         this._height = h;
         this.canvas.height = h;
     }
 
+    // Static method to return unique instance of class
     static getInstance(){
         if(game==null){
             game = new Game();
@@ -48,6 +49,7 @@ class Game {
         return game;
     }
 
+    // Initialize free, foundation and tableau piles
     initPiles(){
         // Four free piles
         this.freePiles = [];
@@ -68,16 +70,19 @@ class Game {
         }
     }
 
+    // Shuffle and deal cards randomly
     shuffleAndDeal(){       
-        // Shuffle deck
+        // Generate ordered array
         var indices = new Array(52);
         for(var i=0;i<52;i++){
             indices[i] = i;
         }
+        // Shuffle ordered array
         for(var i=indices.length-1;i>0;i--){
             var j = Math.floor(Math.random()*(i+1));
             [indices[i],indices[j]] = [indices[j],indices[i]];
         }
+        // Create card objects and put them in tableaus using shuffled indices
         for(var i=0;i<indices.length;i++){
             var pile = this.tableauPiles[i % 8];
             var card = new Card(indices[i],pile);
@@ -89,6 +94,7 @@ class Game {
         }
     }
 
+    // Update the game
     update(){
         // Clear canvas
         this.canvas.getContext("2d").clearRect(0,0,this.width,this.height);

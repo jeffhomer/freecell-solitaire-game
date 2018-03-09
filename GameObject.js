@@ -1,13 +1,11 @@
+// Parent class for game objects. Children must implement update();
 class GameObject{
-    constructor(){
-        
-    }
+    constructor(){}
 
-    update(){
-
-    }
+    update(){}
 }
 
+// Card class
 class Card extends GameObject{
     constructor(index,pile){
         super();
@@ -21,8 +19,6 @@ class Card extends GameObject{
         this.suit = Math.floor(this.index/13);
 
         // Set normalized width, height and position
-        // Card.width = 1.0/10;
-        // Card.height = Card.width*2;
         this.pos = [0,0];
 
         // Get information about suits and color
@@ -36,6 +32,7 @@ class Card extends GameObject{
         //pile.addCard(this);
     }
 
+    // Use static get so that other objects can get card width and height
     static get width(){
         return 1.0/10;
     }
@@ -44,6 +41,7 @@ class Card extends GameObject{
         return 2.0/10;
     }
 
+    // Get text associated with card (Ace-King) of ([Suits])
     getCardText(){
         var suits = Card.getSuits();
         switch(this.number){
@@ -66,11 +64,13 @@ class Card extends GameObject{
         this.text = card + " of " + suits[this.suit];
     }
 
+    // Get card color assuming suit order is alternating (black,red,black,red)
     getCardColor(){
         var colors = Card.getColors();
         this.color = colors[this.suit % 2];
     }
 
+    // Static method for get suits and colors so that other objects can get them
     static getSuits(){
         return ["Clubs","Diamonds","Spades","Hearts"];
     }
@@ -79,6 +79,7 @@ class Card extends GameObject{
         return ["black","red"];
     }
 
+    // Draw card to screen
     update(){
         // Scale coordinates
         var game = Game.getInstance();
@@ -101,10 +102,12 @@ class Card extends GameObject{
         this.ctx.fillText(this.text,pos_scaled[0]+width_scaled/2,pos_scaled[1]+10);
     }
     
+    // Move back to last valid position
     resetPosition(){
         this.pile.resetPosition(this);
     }
 
+    // Check for collision with pile
     collidesWith(pile){
         if(this.pile==pile){return false;}
         var pilePos = pile.collisionArea;
@@ -118,6 +121,7 @@ class Card extends GameObject{
     }
 }
 
+// Class for background image and pile markers
 class GameSurface extends GameObject{
     constructor(){
         super();
@@ -126,6 +130,7 @@ class GameSurface extends GameObject{
         this.ctx = Game.getInstance().canvas.getContext("2d");
     }
 
+    // Draw background and pile markers
     update(){
         // Game instance
         var game = Game.getInstance();
@@ -150,6 +155,7 @@ class GameSurface extends GameObject{
         }
     }
 
+    // Draw a marker for a pile, text, and color
     drawMarker(pile,text,color){
         this.ctx.strokeStyle = color;
         this.ctx.setLineDash([5,5]);
@@ -163,15 +169,19 @@ class GameSurface extends GameObject{
     }
 }
 
+// Class for welcome/win text
 class Text extends GameObject{
     constructor(text){
         super();
         var game = Game.getInstance();
         this.ctx = game.canvas.getContext("2d");
         this.text = text;
-        this.pos = [0.5,0.75]
+
+        // Place text near bottom of screen, horizontally centered
+        this.pos = [0.5,0.75];
     }
 
+    // Draw text to canvas
     update(){
         // Scale coordinates
         var game = Game.getInstance();

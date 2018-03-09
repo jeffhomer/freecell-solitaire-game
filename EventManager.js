@@ -1,5 +1,6 @@
 var eventManager;
 
+// Event manager class (singleton)
 class EventManager{
     constructor(){
         this.prevMousePos = [0,0];
@@ -17,7 +18,8 @@ class EventManager{
         // Initial window resize
         this.handleWindowResize();
     }
-    
+
+    // Static method to return unique instance of class
     static getInstance(){
         if(eventManager==null){
             eventManager = new EventManager();
@@ -25,6 +27,7 @@ class EventManager{
         return eventManager;
     }
 
+    // Handle a key press. Only valid in welcome state.
     handleKeyPress(event){
         if(StateManager.getInstance().currentState == "Welcome"){
             if(event.which == 13){
@@ -33,13 +36,20 @@ class EventManager{
         }
     }
 
+    // Handle mouse down event.
     handleMouseDown(event){
+        // Only valid in playing state.
         if(StateManager.getInstance().currentState == "Play"){
+            // Get click position and check iterate through game objects
             var clickPos = EventManager.getMousePosition(event);
             var game = Game.getInstance();
             for (var index in game.gameObjects){
                 var card = game.gameObjects[index];
+
+                // If not a card, continue
                 if(!(card instanceof Card)){continue;}
+
+                // Check for collision
                 if(card.isMoveable && 
                     clickPos[0] < card.pos[0] + Card.width &&
                     clickPos[0] > card.pos[0] &&
@@ -55,6 +65,7 @@ class EventManager{
         }
     }
 
+    // Handle mouse move event. Only valid if a card is being dragged.
     handleMouseMove(event){
         if(this.selectedCard){
             var clickPos = EventManager.getMousePosition(event);
@@ -65,6 +76,7 @@ class EventManager{
         }
     }
 
+    // Handle mouse up event. Only valid if card is being dragged.
     handleMouseUp(event){
         if(this.selectedCard){
             // Check collision with piles
@@ -92,13 +104,19 @@ class EventManager{
         Game.getInstance().update();
     }
     
+    // Handle mouse double-click event. Only valid in play state.
     handleMouseClick(event){
         if(StateManager.getInstance().currentState == "Play"){
+            // Get click position and iterate through game objects
             var clickPos = EventManager.getMousePosition(event);
             var game = Game.getInstance();
             for (var index in game.gameObjects){
                 var card = game.gameObjects[index];
+
+                // If object is not card, skip
                 if(!(card instanceof Card)){continue;}
+
+                // Check for collision
                 if(card.isMoveable && 
                     clickPos[0] < card.pos[0] + Card.width &&
                     clickPos[0] > card.pos[0] &&
@@ -128,6 +146,7 @@ class EventManager{
         }
     }
 
+    // Scale and resize objects for resize event
     handleWindowResize(event){
         var game = Game.getInstance();
         game.width = Math.min(document.body.clientWidth,800);
@@ -135,6 +154,7 @@ class EventManager{
         game.update();
     }
 
+    // General method for getting mouse position from a callback
     static getMousePosition(event){
         var game = Game.getInstance();
         var rect = game.canvas.getBoundingClientRect();
